@@ -83,7 +83,7 @@ The `src` folder contains the source code for the project. It includes the firmw
 	
 7.	**Real-time Alerts**: Add notifications for abnormal CO2 levels or temperature spikes during exercise to prevent health risks.
 	
-8.	**Cross-Platform Syncing**: Allow synchronization with fitness apps like Apple Health or Google Fit to aggregate data with other workout metrics.
+8.	**Cross-Platform Syncing**:Allow synchronization with fitness apps like Apple Health or Google Fit to aggregate data with other workout metrics.
 
 ## Contributors
 <p align="left">
