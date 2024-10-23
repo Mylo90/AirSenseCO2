@@ -99,6 +99,9 @@ The `src` folder contains the source code for the project. It includes the firmw
   <a href="https://github.com/Lovathoren" target="_blank">
     <img src="https://github.com/Lovathoren.png" alt="Lovathoren" style="border-radius: 50%; width: 40px; height: 40px; object-fit: cover; border: 2px solid white;">
   </a>
+ <a href="https://github.com/90dennis" target="_blank">
+    <img src="https://github.com/90dennis.png" alt="90dennis" style="border-radius: 50%; width: 40px; height: 40px; object-fit: cover; border: 2px solid white;">
+  </a>
 </p>
 
 
