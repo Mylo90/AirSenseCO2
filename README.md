@@ -32,7 +32,7 @@ The `src` folder contains the source code for the project. It includes the firmw
 - **Compact and Lightweight Design**: Easily integrates into sportswear or fitness gear, ensuring comfort during any activity.
 
 ## Target Audience
-- **Athletes** Aiming to enhance respiratory efficiency and optimize breathing during physical exertion.
+- **Athletes** aiming to enhance respiratory efficiency and optimize breathing during physical exertion.
 - **Fitness Enthusiasts** looking to improve their workout performance by monitoring and adjusting breathing techniques.
 
 ## Prerequisites
