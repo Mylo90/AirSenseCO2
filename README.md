@@ -105,6 +105,3 @@ The `src` folder contains the source code for the project. It includes the firmw
 
 
 
-
-
-
