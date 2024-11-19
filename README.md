@@ -6,7 +6,7 @@ The mask is particularly useful for monitoring breathing efficiency, CO2 combust
 
 ## Early prototype
   <a href="https://github.com/Mylo90/CO2-Mask/tree/main/docs/earlyPrototype" target="_blank">
-    <img src="https://github.com/Mylo90/CO2-Mask/blob/main/docs/earlyPrototype/prototype.jpg" alt="Earlyprototype" style="border-radius: 50%; width: 400px; height: 400px; object-fit: cover; border: 2px solid white;">
+    <img src="https://github.com/Mylo90/AirSenseCO2/blob/main/docs/earlyPrototype/Prototype2.0.png" alt="Earlyprototype" style="border-radius: 50%; width: 400px; height: 400px; object-fit: cover; border: 2px solid white;">
 </a>
 
 
