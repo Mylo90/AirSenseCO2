@@ -11,7 +11,7 @@ The mask is particularly useful for monitoring breathing efficiency, CO2 combust
 
 
 ## Table of contents 
-- [Prototype](https://github.com/Mylo90/AirSenseCO2/blob/main/docs/prototypeV2/Prototypev2.png)
+- [Prototype](https://github.com/Mylo90/AirSenseCO2/blob/main/docs/prototypeV2/)
 - [Table of Contents](https://github.com/Mylo90/CO2-Mask/tree/main?tab=readme-ov-file#Table-of-contents)
 - [Key Features](https://github.com/Mylo90/CO2-Mask/tree/main?tab=readme-ov-file#key-features)
 - [Prerequisites](https://github.com/Mylo90/CO2-Mask/tree/main?tab=readme-ov-file#prerequisites)
