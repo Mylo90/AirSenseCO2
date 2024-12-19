@@ -1,13 +1,13 @@
 #include <Wire.h>
-#include <ArduinoBLE.h>
-#include "SparkFun_STC3x_Arduino_Library.h"
+#include <ArduinoBLE.h>  // Includes the BLE library for handling Bluetooth Low Energy on Nano 33 BLE
+#include "SparkFun_STC3x_Arduino_Library.h"  // Includes the library for using the STC3x CO2 sensor
 
-STC3x mySensor;
+STC3x mySensor;  // Creates an object for the CO2 sensor
 
 // Define BLE service and characteristics for CO2 and temperature
-BLEService sensorService("180C");
-BLECharacteristic co2Characteristic("2A6E", BLERead | BLENotify, 20);
-BLECharacteristic tempCharacteristic("2A6F", BLERead | BLENotify, 20);
+BLEService sensorService("180C");  // Defines a custom BLE service with a specific UUID (180C in hex)
+BLECharacteristic co2Characteristic("2A6E", BLERead | BLENotify, 20);  // Defines a characteristic for CO2 levels (read and notify) as a string (20 bytes max)
+BLECharacteristic tempCharacteristic("2A6F", BLERead | BLENotify, 20); // Defines a characteristic for temperature (read and notify) as a string (20 bytes max)
 
 // Variables for LED pulsing when not connected
 const int yellowLedPin = 13;  // Built-in yellow/orange LED pin
@@ -18,81 +18,91 @@ bool ledState = LOW;
 void setup() {
   Serial.begin(115200);  
   if (Serial) {
-    while (!Serial);  
-  }
-
-  // Initialize the yellow/orange LED pin
-  pinMode(yellowLedPin, OUTPUT);
-  digitalWrite(yellowLedPin, LOW);  // Turn off LED initially
-
-  Wire.begin();
-  if (mySensor.begin() == false) {
-    Serial.println(F("Sensor not detected. Please check wiring. Freezing..."));
+  while (!Serial);  
+}
+  
+  // Initialize the CO2 sensor
+  Wire.begin();  // Starts I2C communication
+  if (mySensor.begin() == false) {  // Checks if the sensor is connected properly
+    Serial.println(F("Sensor not detected. Please check wiring. Freezing..."));  // If not, print error message and halt the program
     while (1);
   }
 
-  if (mySensor.setBinaryGas(STC3X_BINARY_GAS_CO2_AIR_25) == false) {
-    Serial.println(F("Could not set the binary gas! Freezing..."));
+  // Set the sensor's binary gas (CO2 in air, 25% range)
+  if (mySensor.setBinaryGas(STC3X_BINARY_GAS_CO2_AIR_25) == false) {  // Configures the sensor to measure CO2
+    Serial.println(F("Could not set the binary gas! Freezing..."));  // If it fails, print error message and halt the program
     while (1);
   }
 
-  if (!BLE.begin()) {
-    Serial.println("* Starting Bluetooth® Low Energy module failed!");
+  // Initialize BLE
+  if (!BLE.begin()) {  // Checks if the BLE module starts correctly
+    Serial.println("* Starting BluetoothÂ® Low Energy module failed!");  // If not, print error message and halt the program
     while (1);
   }
 
-  BLE.setLocalName("Nano33BLE_CO2");
-  BLE.setAdvertisedService(sensorService);
+  // Set BLE name and advertising
+  BLE.setDeviceName("AirSenseCO2");  // Sets the name of the BLE device shown in the BLE terminal
+  BLE.setLocalName("AirSenseCO2");
+  BLE.setAdvertisedService(sensorService);  // Associates the defined service with advertising
 
-  sensorService.addCharacteristic(co2Characteristic);
-  sensorService.addCharacteristic(tempCharacteristic);
-  BLE.addService(sensorService);
+  // Add CO2 and temperature characteristics to the service
+  sensorService.addCharacteristic(co2Characteristic);  // Adds the CO2 characteristic to the service
+  sensorService.addCharacteristic(tempCharacteristic); // Adds the temperature characteristic to the service
+  BLE.addService(sensorService);  // Adds the service to BLE
 
-  BLE.advertise();
-  Serial.println("BLE is now advertising...");
+  // Start advertising
+  BLE.advertise();  // Starts advertising so devices can find this unit via BLE
+  Serial.println("BLE is now advertising...");  // Prints a message indicating that BLE advertising is active
 }
 
 void loop() {
-  BLEDevice central = BLE.central();
+  // Wait for a connection from a central device (e.g., BLE terminal)
+  BLEDevice central = BLE.central();  // Waits for a central device to connect
+  if (central) {  // When a device connects
+  
+    digitalWrite(yellowLedPin, HIGH); //Yellow led lamp
 
-  if (central) {
-    // When connected, turn on the yellow/orange LED solid
-    digitalWrite(yellowLedPin, HIGH);
-    
     Serial.print("Connected to central: ");
-    Serial.println(central.address());
+    Serial.println(central.address());  // Prints the address of the connected device
 
-    while (central.connected()) {
-      if (mySensor.measureGasConcentration()) {
-        float co2 = mySensor.getCO2();
-        float temp = mySensor.getTemperature();
+    // Measure and send sensor data while the device is connected
+    while (central.connected()) {  // As long as the central device is connected
+    
+      if (mySensor.measureGasConcentration()) {  
+        float co2_percent = mySensor.getCO2();  
+        float temp = mySensor.getTemperature();  
 
-        // Print data in tab-separated format for Serial Plotter
-        Serial.print(co2, 2);  // Print CO2
-        Serial.print("\t");    // Tab character between values
-        Serial.println(temp, 2);  // Print temperature and end with newline
+        // Convert CO2 from % to ppm
+        float co2_ppm = co2_percent * 10000.0;
+
+        // Print data to the Serial Monitor in ppm
+        Serial.print(F("CO2(ppm): "));
+        Serial.print(co2_ppm, 2);
+        Serial.print(F("\tTemperature(C): "));
+        Serial.println(temp, 2);
 
         // Create buffers for the formatted strings
         char co2Str[20];
         char tempStr[20];
 
-        // Format the CO2 and temperature as ASCII strings
-        snprintf(co2Str, sizeof(co2Str), "CO2: %.2f%%", co2);
-        snprintf(tempStr, sizeof(tempStr), "Temp: %.2fC", temp);
+        // Format CO2 in ppm and temperature
+        snprintf(co2Str, sizeof(co2Str), "CO2: %.2f PPM", co2_ppm);
+        snprintf(tempStr, sizeof(tempStr), "Temp: %.2f C", temp);
 
-        // Send data via BLE characteristics as ASCII strings
+        // Send data via BLE
         co2Characteristic.writeValue(co2Str);
         tempCharacteristic.writeValue(tempStr);
+      
+       }
+        delay(1000);  // Waits one second before the next measurement
       }
-      delay(0000);
-    }
-
-    Serial.println("Disconnected from central.");
-  } else {
+      
+    Serial.println("Disconnected from central.");  // Prints a message when the central device disconnects 
+  }  else {
     // If not connected, pulse the yellow/orange LED
     unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis >= pulseInterval) {
+    if (currentMillis - previousMillis >= pulseInterval) {  
       previousMillis = currentMillis;
 
       // If the LED is off, turn it on, and vice versa
