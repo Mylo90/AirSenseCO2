@@ -17,8 +17,13 @@ This file contains the logic for:
 This file contains the logic for:
 - Setting up the Bluetooth Low Energy (BLE) communication on the Arduino.
 - Advertising the device as a BLE peripheral that sends CO2 concentration and temperature data to a central device.
-- Handling BLE connections and disconnections with visual feedback using an LED.
+- Handling BLE connections and disconnections with visual feedback using an LED.'
 
+### 3. readAirSense.py
+This file contains the logic for:
+- Searching for nerby the AirSenseCO2 using BLE, using its MAC-adress.
+- Saves the read data in 2 seperate .csv files for later analyze of data in excel.
+  
 The BLE service includes two main characteristics:
 - **CO2 Concentration Characteristic**: Sends the CO2 concentration in percentage.
 - **Temperature Characteristic**: Sends the temperature in Celsius.
